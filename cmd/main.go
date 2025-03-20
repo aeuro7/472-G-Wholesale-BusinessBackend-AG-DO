@@ -53,6 +53,9 @@ func main() {
 			panic("failed to migrate database: " + err.Error())
 		}
 		
+		&entities.SupplierOrderList{}, &entities.Chat{},
+		&entities.Message{},
+	)
 
 	router.SetUpRouters(app, db)
 

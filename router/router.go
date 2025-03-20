@@ -54,12 +54,20 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	creditcardService := usecases.InitiateCreditCardService(creditcardRepo)
 	creditcardHandler := api.InitiateCreditCardHandler(creditcardService)
 
+	chatRepo := database.InitiateChatPostgresRepository(db)
+	chatService := usecases.InitiateChatService(chatRepo)
+	chatHandler := api.InitiateChatHandler(chatService)
+
+	messageRepo := database.InitiateMessagePostgresRepository(db)
+	messageService := usecases.InitiateMessageService(messageRepo)
+	messageHandler := api.InitiateMessageHandler(messageService)
 	handlers := api.ProvideHandlers(
 		userHandler, productHandler, transactionHandler,
 		authHandler, orderHandler,
 		orderLineHandler, supplierHandler,
 		supplierOrderListHandler, tierListHandler, adminHandler,creditcardHandler,
 	)
+		supplierOrderListHandler, tierListHandler, adminHandler, chatHandler, messageHandler)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
@@ -139,6 +147,10 @@ func SetUpRouters(app *fiber.App, db *gorm.DB) {
 	app.Get("/creditcards/:id", handlers.CreditCardHandler.GetCreditCardsByUserID)
 	app.Delete("/creditcard/number/:card_number", handlers.CreditCardHandler.DeleteByCardNumber)
 	
+	app.Get("/chat", chatHandler.GetAllChats)
+	app.Post("/chat", chatHandler.CreateChat)
+
+	app.Post("/message/:id", messageHandler.CreateMessage)
 }
 
 // hi
