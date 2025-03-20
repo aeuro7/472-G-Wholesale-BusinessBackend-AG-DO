@@ -41,7 +41,7 @@ func main() {
 		panic("failed to connect to database")
 	}
 
-	db.AutoMigrate(
+	if err := db.AutoMigrate(
 		&entities.User{}, &entities.Product{},
 		&entities.Transaction{},
 		&entities.Order{},
@@ -49,9 +49,14 @@ func main() {
 		&entities.OrderLine{}, &entities.Supplier{},
 		&entities.SupplierOrderList{},
 		&entities.CreditCard{},
-	)
+		); err != nil {
+			panic("failed to migrate database: " + err.Error())
+		}
+		
 
 	router.SetUpRouters(app, db)
 
-	app.Listen(":8000")
+	if err := app.Listen(":8000"); err != nil {
+		panic("failed to start server: " + err.Error())
+	}
 }
