@@ -115,9 +115,7 @@ func (a *AuthService) ChangePassword(req *request.ChangePasswordRequest) error {
 		return errors.New("user not found")
 	}
 
-	fmt.Println(existUser.Password + " user passoword")
-	fmt.Println(req.OldPassword + " old password")
-
+	
 	// Compare the old password
 	if err := bcrypt.CompareHashAndPassword([]byte(existUser.Password), []byte(req.OldPassword)); err != nil {
 		return errors.New("incorrect old password")
