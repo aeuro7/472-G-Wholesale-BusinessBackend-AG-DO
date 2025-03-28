@@ -31,10 +31,16 @@ services:
       context: .
       dockerfile: docker/prod.Dockerfile
     ports:
-      - "8080:8080"
+      - "8000:8000"
     depends_on:
       - postgres
     restart: unless-stopped
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: myuser
+      DB_PASSWORD: mypassword
+      DB_NAME: mydatabase
 
 volumes:
   postgres_data:

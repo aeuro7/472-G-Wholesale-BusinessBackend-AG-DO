@@ -8,11 +8,12 @@ RUN go mod download
 # คัดลอกโค้ดแอปพลิเคชัน
 COPY . .
 
-# สร้างแอปพลิเคชัน
-RUN go build -o myapp ./cmd/main.go
-
 # ขั้นตอนการสร้างภาพสุดท้าย
-FROM alpine:latest
+FROM golang:1.22-alpine
 WORKDIR /root/
-COPY --from=builder /app/myapp .
-CMD ["./myapp"]
+
+# คัดลอกโค้ดแอปพลิเคชันจาก builder
+COPY --from=builder /app .
+
+# รันแอปพลิเคชันด้วย go run main.go
+CMD ["go", "run", "./cmd/main.go"]
